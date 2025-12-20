@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/base64"
 	"encoding/json"
-	"ffmpeg/internal"
 	"fmt"
 	"net/http"
 	"os"
@@ -17,12 +16,16 @@ import (
 	"github.com/google/uuid"
 
 	"ffmpeg/api"
+	"ffmpeg/internal"
 )
 
 func main() {
 	http.HandleFunc("/v1/process", handleProcess)
+	if err := http.ListenAndServe(":8080", nil); err != nil {
+		fmt.Println("server failed to start:", err)
+		os.Exit(1)
+	}
 	fmt.Println("Listening on :8080")
-	http.ListenAndServe(":8080", nil)
 }
 
 func handleProcess(w http.ResponseWriter, r *http.Request) {
@@ -54,7 +57,7 @@ func handleProcess(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if req.Output.InlineContentType != "" {
-		streamFirstFile(w, r, jobPath, req.Output.InlineContentType)
+		streamFirstResult(w, r, jobPath, req)
 		return
 	}
 
@@ -165,11 +168,14 @@ func collectResults(s3Client *s3.Client, req api.ProcessRequest, jobPath string)
 	return results, nil
 }
 
-func streamFirstFile(w http.ResponseWriter, r *http.Request, jobPath, contentType string) {
+func streamFirstResult(w http.ResponseWriter, r *http.Request, jobPath string, req api.ProcessRequest) {
 	files, _ := os.ReadDir(jobPath)
 	for _, f := range files {
 		if !f.IsDir() {
-			w.Header().Set("Content-Type", contentType)
+			if _, isInput := req.Inputs[f.Name()]; isInput {
+				continue
+			}
+			w.Header().Set("Content-Type", req.Output.InlineContentType)
 			http.ServeFile(w, r, filepath.Join(jobPath, f.Name()))
 			return
 		}

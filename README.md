@@ -15,6 +15,22 @@ You provide input files and FFmpeg commands; the API returns the results via **S
 
 `POST /v1/process`
 
+### API Example
+
+```bash
+curl -X POST http://localhost:8080/v1/process \
+  -H "Content-Type: application/json" \
+  -d '{
+    "input": {
+      "input.mp4": { "http": "https://example.com/video.mp4" }
+    },
+    "commands": [
+      ["-i", "input.mp4", "-vn", "output.mp3"]
+    ],
+    "output": { "base64": true }
+  }'
+```
+
 ## Request Structure
 
 ```json
@@ -91,23 +107,35 @@ Filenames reference input files or outputs from previous commands.
 }
 ```
 
-## Example
+## S3 Configuration
 
-```bash
-curl -X POST http://localhost:8080/v1/process \
-  -H "Content-Type: application/json" \
-  -d '{
-    "input": {
-      "input.mp4": { "http": "https://example.com/video.mp4" }
-    },
-    "commands": [
-      ["-i", "input.mp4", "-vn", "output.mp3"]
-    ],
-    "output": { "base64": true }
-  }'
+S3 access is configured **per request** using the `s3Config` object.
+
+* Works with:
+  * AWS S3
+  * S3-compatible providers (MinIO, DigitalOcean Spaces, Cloudflare R2, etc.)
+* The `endpoint` should **not** include a bucket name
+
+* `useSSL` defaults to **true** if omitted
+
+### Example
+
+```json
+{
+  "s3Config": {
+    "endpoint": "s3.amazonaws.com",
+    "region": "us-east-1",
+    "accessKey": "AKIA...",
+    "secretKey": "SECRET...",
+    "useSSL": true
+  }
+}
 ```
 
 ## Docker
+
+* FFmpeg is bundled
+* No external dependencies
 
 ### Image
 
@@ -127,10 +155,23 @@ API available at:
 http://localhost:8080
 ```
 
-## Notes
+## Scaling & Concurrency
 
-* FFmpeg is bundled
-* No external dependencies
-* Temporary files are cleaned automatically
-* S3 credentials are supplied per request
-* Go binary on scratch image
+Each request is handled independently by the HTTP server.
+
+* Input files are fetched **in parallel** (HTTP, S3, Base64 decoding).
+* FFmpeg is executed as a separate OS process per request.
+
+Concurrency comes from handling multiple HTTP requests simultaneously. FFmpeg’s own multithreading is fully supported and can be controlled via standard flags such as:
+
+```bash
+-threads 0   # auto
+-threads 4   # fixed
+```
+
+The service is stateless:
+
+* No shared filesystem state
+* No in-memory session data
+
+This makes it easy to scale **horizontally** by running multiple instances behind a load balancer, for example using **Kubernetes**, or a managed container service.
