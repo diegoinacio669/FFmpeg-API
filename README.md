@@ -48,9 +48,10 @@ A map of **filename → source** (used by FFmpeg).
 
 Supported sources:
 
-* `s3`: `s3://bucket/key`
-* `http`: public URL
-* `base64`: Base64-encoded content
+* `s3`: Objects stored in S3, referenced as `s3://bucket/key`
+* `http`: Accessible URLs
+* `base64`: Content provided as a Base64-encoded string
+* `temporary`: A placeholder for indeterminate files that are not emitted as outputs
 
 ```json
 {

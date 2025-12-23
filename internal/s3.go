@@ -12,7 +12,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/credentials"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 
-	"ffmpeg/api"
+	"ffmpeg-api/api"
 )
 
 func GetS3Client(authentication *api.S3Config) *s3.Client {

@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.2] - 2025-12-23
+
+### Added
+
+- Logging support to improve observability and debugging.
+- A new temporary input type, allowing indeterminate files to be processed without producing output artifacts.
+
 ## [1.0.1] - 2025-12-20
 
 ### Fixed

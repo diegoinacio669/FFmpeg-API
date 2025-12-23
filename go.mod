@@ -1,4 +1,4 @@
-module ffmpeg
+module ffmpeg-api
 
 go 1.25
 
